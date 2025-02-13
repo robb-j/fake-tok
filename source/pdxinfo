@@ -1,0 +1,7 @@
+name=FakeTok
+author=Rob Anderson
+description=
+bundleID=io.r0b.FakeTok
+imagePath=assets
+version=0.0
+buildNumber=1

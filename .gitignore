@@ -1,0 +1,7 @@
+#
+# Files to ignore from Git
+#
+
+PlaydateSDK
+*.pdx
+.DS_Store
