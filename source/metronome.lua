@@ -3,10 +3,15 @@ local gfx <const> = playdate.graphics
 class("Metronome").extends(Object)
 
 function Metronome:init()
-  self:setBpm(120)
+  
   self.elapsed = nil
   self.count = nil
   self.step = 4
+  
+  self.minBpm = 60
+  self.maxBpm = 240
+  
+  self:setBpm(120)
   
   self.tick = playdate.sound.sampleplayer.new("sounds/tick.wav")
 end
@@ -14,6 +19,7 @@ end
 function Metronome:start()
   self.elapsed = 0
   self.count = 0
+  self.tick:play()
 end
 
 function Metronome:stop()
@@ -51,10 +57,15 @@ end
 -- end
 
 function Metronome:setBpm(value)
+  value = math.max(self.minBpm, math.min(self.maxBpm, value))
   self.bpm = value
   self.beatDuration = (1 / value) * 60 * 1000
   
   print("BPM", value)
+end
+
+function Metronome:getBpmRatio()
+  return (self.bpm - self.minBpm) / (self.maxBpm - self.minBpm)
 end
 
 -- function Metronome:getBeatDuration()
