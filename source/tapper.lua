@@ -41,10 +41,11 @@ function Tapper:getBpm()
         if diff < 1000 then
           count += 1
           sum += diff
+          last = value
         end
+      else
+        last = value
       end
-      
-      last = value
     end
   end
   

@@ -4,6 +4,7 @@ import "CoreLibs/sprites"
 import "CoreLibs/timer"
 import "CoreLibs/easing"
 
+import "lib"
 import "tapper"
 import "metronome"
 import "classic"
@@ -17,12 +18,27 @@ local faces = { Modern() }
 local face = faces[1]
 local hold = nil
 local lastTick = playdate.getCurrentTimeMilliseconds()
-local tapper = Tapper(5)
+local tapper = Tapper(10)
 
 function setup()
-  -- TODO: load metronome from state
+  load()
   face:setup(metronome)
   playdate.setCrankSoundsDisabled(true)
+end
+
+function save()
+  playdate.datastore.write({
+    bpm = metronome.bpm,
+    step = metronome.step,
+    face = face
+  })
+end
+
+function load()
+  local state = playdate.datastore.read()
+  metronome:setBpm(state.bpm)
+  -- TODO: set step
+  -- TODO: set face
 end
 
 function playdate.update()
@@ -35,6 +51,8 @@ function playdate.update()
     face:update(dt)
   end
   
+  playdate.timer.updateTimers()
+  
   lastTick = ms
 end
 
@@ -43,7 +61,7 @@ function playdate.cranked(change, acceleratedChange)
     -- ~~ 4 turns for 40 to 200
     local ratio = 0.5
     local value = (change / (math.pi * 2))  * ratio
-    -- print(value)
+    
     metronome:setBpm(metronome.bpm + value)
     tapper:reset()
   end
@@ -54,6 +72,14 @@ function playdate.BButtonDown()
   if bpm ~= nil then
     metronome:setBpm(bpm)
   end
+end
+
+function playdate.gameWillTerminate()
+  save()
+end
+
+function playdate.deviceWillSleep()
+  save()
 end
   
 setup()
