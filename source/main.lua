@@ -36,9 +36,11 @@ end
 
 function load()
   local state = playdate.datastore.read()
-  metronome:setBpm(state.bpm)
-  -- TODO: set step
-  -- TODO: set face
+  if state ~= nil then
+    metronome:setBpm(state.bpm)
+    -- TODO: set step
+    -- TODO: set face
+  end
 end
 
 function playdate.update()
